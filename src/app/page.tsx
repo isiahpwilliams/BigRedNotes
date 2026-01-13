@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from 'next/image';
-import Logo from '../assets/cornell_logo.png';
+import Logo from '../assets/transparent_logo.png';
 
 export default function Home() {
   return (
@@ -22,7 +22,7 @@ export default function Home() {
           <p className="text-xl">Contribute to the community and submit your old notes!</p>
         </div>
         <div className="flex">
-          <Image src={Logo} alt={"Cornell Logo"} className="max-h-60 w-auto" />
+          <Image src={Logo} alt={"Cornell Logo"} className="max-h-100 w-auto" />
         </div>
       </div>
     </div>
