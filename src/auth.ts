@@ -1,5 +1,6 @@
-import Google from "next-auth/providers/google";
-import type { NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import type { NextAuthConfig } from "next-auth"
 
 export const authConfig = {
   providers: [
@@ -10,13 +11,12 @@ export const authConfig = {
   ],
   callbacks: {
     async signIn({ user }) {
-      // Only allow emails ending with @cornell.edu
-      return user.email?.endsWith("@cornell.edu") ?? false;
+      return user.email?.endsWith("@cornell.edu") ?? false
     },
     async redirect({ baseUrl }) {
-      // Always redirect to /files after successful login
-      return `${baseUrl}/files`;
+      return `${baseUrl}/files`
     },
   },
-} satisfies NextAuthConfig;
+} satisfies NextAuthConfig
 
+export const { handlers, auth } = NextAuth(authConfig)

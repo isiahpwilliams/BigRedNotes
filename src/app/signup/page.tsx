@@ -1,11 +1,11 @@
-import { useState } from "react"
+"use client"
 
-export default function Signup() {
-    
+import { signIn } from "next-auth/react"
 
-    return (
-        <div className="area min-h-screen bg-white text-black font-sans p-2">
-            
-        </div>
-    )
+export default function LoginButton() {
+  return (
+    <button onClick={() => signIn("google")}>
+      Sign in with Google
+    </button>
+  )
 }
