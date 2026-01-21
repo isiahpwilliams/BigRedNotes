@@ -1,19 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import Image from 'next/image';
 import Logo from '../assets/transparent_logo.png';
+import GoogleButton from "react-google-button";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
   return (
-    <div className="area min-h-screen bg-white text-black font-sans p-2">
-      <nav className="flex w-full justify-end p-4 text-2xl">
-        <div className="flex gap-4">
-          <Link href={'/signup'}>Sign Up</Link>
-          <div className="mb-1">|</div>
-          <Link href={'/login'}>Log In</Link>
-        </div>
-      </nav>
-      <div className="flex items-center justify-center gap-10 mt-10">
-        <div className="flex justify-center text-left flex-col gap-4">
+    <div className="area min-h-screen bg-white items-center text-black font-sans p-2">
+      <div className="flex flex-col items-center justify-center mt-10">
+        <div className="flex gap-10">
+          <div className="flex justify-center text-left flex-col gap-4">
           <div>
             <h2 className="text-4xl font-bold">Big Red Notes</h2>
             <p className="text-xl font-bold">Cornell's Premier Note Sharing Platform</p>
@@ -23,6 +21,11 @@ export default function Home() {
         </div>
         <div className="flex">
           <Image src={Logo} alt={"Cornell Logo"} className="max-h-100 w-auto" />
+        </div>
+        </div>
+        <div className="flex items-center justify-center flex-col -mt-10">
+          <p className="text-xl font-bold mb-2">Cornell Student Log in</p>
+          <GoogleButton onClick={() => { signIn("google") }}/>
         </div>
       </div>
     </div>
