@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from 'next/image';
 import Logo from '../assets/transparent_logo.png';
 import GoogleButton from "react-google-button";
