@@ -3,14 +3,20 @@
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import Navbar from '@/components/navbar.tsx';
 import FileCard from '@/components/file_card';
+import { useState } from 'react';
 
-type Item = {
+type Course = {
     id: number;
     name: string;
 }
 
 export default function Files() {
+    const [selected, setSelected] = useState("");
     const classes = [{ id: 0, name: 'CS 3780' }, { id: 1, name: 'PSYCH 1101' }, { id: 2, name: 'CS 3410' }]
+
+    const handleOnSelect = (item: Course) => {
+        setSelected(item.name)
+    };
 
     return (
         <div className='area min-h-screen bg-white'>
@@ -22,7 +28,7 @@ export default function Files() {
                 <p>Filter Notes by Course Code</p>
             </div>
             <div className='flex justify-center items-center'>
-                <ReactSearchAutocomplete<Item> items={classes} className='w-4/5' />
+                <ReactSearchAutocomplete<Course> items={classes} className='w-4/5' onSelect={handleOnSelect}/>
             </div>
             <div className='flex items-center justify-center mt-8'>
                 <FileCard name={'Logo'} date={'10-31-2025'} picture={'/transparent_logo.png'} alt={'Logo'} />
