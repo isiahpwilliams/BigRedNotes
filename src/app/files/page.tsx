@@ -15,6 +15,12 @@ export default function Files() {
     return (
         <div className='area min-h-screen bg-white'>
             <Navbar />
+            <div className='flex justify-center items-center text-4xl text-black font-bold mb-4'>
+                <h1>Notes</h1>
+            </div>
+            <div className='flex justify-center items-center text-black text-xl mb-2'>
+                <p>Filter Notes by Course Code</p>
+            </div>
             <div className='flex justify-center items-center'>
                 <ReactSearchAutocomplete<Item> items={classes} className='w-4/5' />
             </div>
