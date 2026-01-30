@@ -1,38 +1,103 @@
 "use client";
 
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
-import Navbar from '@/components/navbar.tsx';
-import FileCard from '@/components/file_card';
-import { useState } from 'react';
+import Navbar from "@/components/navbar.tsx";
+import FileCard from "@/components/file_card";
+import SearchSelect, { type SearchSelectItem } from "@/components/search_select";
+import { useState, useEffect, useCallback } from "react";
 
-type Course = {
-    id: number;
-    name: string;
-}
+type CourseItem = { id: number; name: string };
+type FileItem = { id: number; name: string; fileUrl: string; date: string };
+
+const IMAGE_EXT = /\.(jpe?g|png|gif|webp|bmp|svg)$/i;
 
 export default function Files() {
-    const [selected, setSelected] = useState("");
-    const classes = [{ id: 0, name: 'CS 3780' }, { id: 1, name: 'PSYCH 1101' }, { id: 2, name: 'CS 3410' }]
+  const [courses, setCourses] = useState<CourseItem[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<CourseItem | null>(null);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [loading, setLoading] = useState(false);
 
-    const handleOnSelect = (item: Course) => {
-        setSelected(item.name)
+  const loadCourses = useCallback(async () => {
+    try {
+      const res = await fetch("/api/courses");
+      if (res.ok) {
+        const data = await res.json();
+        setCourses(data);
+      }
+    } catch {
+      setCourses([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCourses();
+  }, [loadCourses]);
+
+  useEffect(() => {
+    if (!selectedCourse) {
+      setFiles([]);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    fetch(`/api/files?courseId=${selectedCourse.id}`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (!cancelled) setFiles(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setFiles([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
     };
+  }, [selectedCourse]);
 
-    return (
-        <div className='area min-h-screen bg-white'>
-            <Navbar />
-            <div className='flex justify-center items-center text-4xl text-black font-bold mb-4'>
-                <h1>Notes</h1>
-            </div>
-            <div className='flex justify-center items-center text-black text-xl mb-2'>
-                <p>Filter Notes by Course Code</p>
-            </div>
-            <div className='flex justify-center items-center'>
-                <ReactSearchAutocomplete<Course> items={classes} className='w-4/5' onSelect={handleOnSelect}/>
-            </div>
-            <div className='flex items-center justify-center mt-8'>
-                <FileCard name={'Logo'} date={'10-31-2025'} picture={'/transparent_logo.png'} alt={'Logo'} />
-            </div>
+  const handleOnSelect = useCallback((item: SearchSelectItem) => {
+    setSelectedCourse(item);
+  }, []);
+
+  return (
+    <div className="area min-h-screen bg-white">
+      <Navbar />
+      <div className="flex justify-center items-center text-4xl text-black font-bold mb-4">
+        <h1>Notes</h1>
+      </div>
+      <div className="flex justify-center items-center text-black text-xl mb-2">
+        <p>Filter Notes by Course Code</p>
+      </div>
+      <div className="w-full max-w-4xl mx-auto mb-6 px-4">
+        <SearchSelect
+          items={courses}
+          onSelect={handleOnSelect}
+          placeholder="Search course code..."
+        />
+      </div>
+
+      {loading && (
+        <p className="text-center text-gray-600">Loading files…</p>
+      )}
+
+      {!loading && selectedCourse && files.length === 0 && (
+        <p className="text-center text-gray-600">No files for this course yet.</p>
+      )}
+
+      {!loading && files.length > 0 && (
+        <div className="flex flex-wrap justify-center gap-6 mt-8">
+          {files.map((f) => (
+            <FileCard
+              key={f.id}
+              name={f.name}
+              date={f.date}
+              picture={IMAGE_EXT.test(f.fileUrl) ? f.fileUrl : "/file.svg"}
+              alt={f.name}
+              fileUrl={f.fileUrl}
+            />
+          ))}
         </div>
-    )
+      )}
+    </div>
+  );
 }
