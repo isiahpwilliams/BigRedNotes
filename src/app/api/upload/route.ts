@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { isS3Configured, uploadToS3 } from "@/lib/s3";
 
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
@@ -33,27 +34,33 @@ export async function POST(request: Request) {
 
     const sub = subjectCode.trim().toUpperCase();
     const num = courseNumber.trim();
-    const course = await prisma.course.upsert({
+    const db = prisma as unknown as { course: { upsert: (args: object) => Promise<{ id: number; subjectCode: string; courseNumber: string }> }; note: { create: (args: object) => Promise<{ id: number; name: string; fileUrl: string }> } };
+    const course = await db.course.upsert({
       where: { subjectCode_courseNumber: { subjectCode: sub, courseNumber: num } },
       update: {},
       create: { subjectCode: sub, courseNumber: num },
     });
 
-    await mkdir(UPLOAD_DIR, { recursive: true });
-
     const ext = path.extname(file.name) || "";
     const baseName = path.basename(file.name, ext) || "file";
     const safeBase = baseName.replace(/[^a-zA-Z0-9-_]/g, "_").slice(0, 50);
     const uniqueName = `${safeBase}-${Date.now()}${ext}`;
-    const filePath = path.join(UPLOAD_DIR, uniqueName);
-
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
 
-    const fileUrl = `/uploads/${uniqueName}`;
+    let fileUrl: string;
 
-    const note = await prisma.note.create({
+    if (isS3Configured()) {
+      const key = `uploads/${uniqueName}`;
+      fileUrl = await uploadToS3(key, buffer, file.type || undefined);
+    } else {
+      await mkdir(UPLOAD_DIR, { recursive: true });
+      const filePath = path.join(UPLOAD_DIR, uniqueName);
+      await writeFile(filePath, buffer);
+      fileUrl = `/uploads/${uniqueName}`;
+    }
+
+    const note = await db.note.create({
       data: {
         name: file.name,
         fileUrl,
@@ -68,9 +75,13 @@ export async function POST(request: Request) {
       courseCode: `${course.subjectCode} ${course.courseNumber}`,
     });
   } catch (e) {
-    console.error(e);
+    console.error("Upload error:", e);
+    let message = "Failed to upload file";
+    if (e instanceof Error) message = e.message;
+    else if (typeof e === "string") message = e;
+    else if (e && typeof e === "object" && "message" in e) message = String((e as { message: unknown }).message);
     return NextResponse.json(
-      { error: "Failed to upload file" },
+      { error: message },
       { status: 500 }
     );
   }

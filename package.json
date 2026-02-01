@@ -6,17 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node -e \"const fs=require('fs'),p=require('path');const s=p.join('node_modules','pdfjs-dist','build','pdf.worker.min.mjs');if(fs.existsSync(s))fs.copyFileSync(s,p.join('public','pdf.worker.mjs'));\""
   },
   "dependencies": {
-    "@prisma/client": "^7.3.0",
-    "next": "16.1.1",
+    "@aws-sdk/client-s3": "^3.980.0",
+    "@aws-sdk/s3-request-presigner": "^3.980.0",
+    "@prisma/client": "^6.19.2",
+    "next": "^16.1.6",
     "next-auth": "^5.0.0-beta.25",
-    "prisma": "^7.3.0",
+    "prisma": "^6.19.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-google-button": "^0.8.0",
-    "react-search-autocomplete": "^8.5.2"
+    "react-search-autocomplete": "^8.5.2",
+    "pdfjs-dist": "^4.8.69"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

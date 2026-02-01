@@ -6,9 +6,16 @@ import SearchSelect, { type SearchSelectItem } from "@/components/search_select"
 import { useState, useEffect, useCallback } from "react";
 
 type CourseItem = { id: number; name: string };
-type FileItem = { id: number; name: string; fileUrl: string; date: string };
+type FileItem = {
+  id: number;
+  name: string;
+  fileUrl: string;
+  imageUrl?: string;
+  date: string;
+};
 
 const IMAGE_EXT = /\.(jpe?g|png|gif|webp|bmp|svg)$/i;
+const PDF_EXT = /\.pdf$/i;
 
 export default function Files() {
   const [courses, setCourses] = useState<CourseItem[]>([]);
@@ -86,16 +93,25 @@ export default function Files() {
 
       {!loading && files.length > 0 && (
         <div className="flex flex-wrap justify-center gap-6 mt-8">
-          {files.map((f) => (
-            <FileCard
-              key={f.id}
-              name={f.name}
-              date={f.date}
-              picture={IMAGE_EXT.test(f.fileUrl) ? f.fileUrl : "/file.svg"}
-              alt={f.name}
-              fileUrl={f.fileUrl}
-            />
-          ))}
+          {files.map((f) => {
+            const isPdf = PDF_EXT.test(f.name);
+            return (
+              <FileCard
+                key={f.id}
+                name={f.name}
+                date={f.date}
+                picture={
+                  IMAGE_EXT.test(f.fileUrl)
+                    ? f.imageUrl ?? f.fileUrl
+                    : "/file.svg"
+                }
+                alt={f.name}
+                fileUrl={f.imageUrl ?? f.fileUrl}
+                isPdf={isPdf}
+                noteId={isPdf ? f.id : undefined}
+              />
+            );
+          })}
         </div>
       )}
     </div>

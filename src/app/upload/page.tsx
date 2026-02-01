@@ -77,10 +77,29 @@ export default function Upload() {
         method: "POST",
         body: formData,
       });
-      const data = await res.json().catch(() => ({}));
+      const text = await res.text();
+      const isHtml = text.trimStart().toLowerCase().startsWith("<!doctype") || text.trimStart().toLowerCase().startsWith("<html");
+      let data: { error?: string } = {};
+      if (!isHtml) {
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch {
+          data = {};
+        }
+      }
       if (!res.ok) {
         setStatus("error");
-        setMessage(data.error || "Upload failed.");
+        if (data.error) {
+          setMessage(data.error);
+        } else if (isHtml) {
+          setMessage(
+            res.status === 413
+              ? "File too large. Try a smaller file (under 1MB) or restart dev server after config change."
+              : `Server returned an error (${res.status}). Check the terminal running npm run dev for details.`
+          );
+        } else {
+          setMessage(text?.slice(0, 150) || `Upload failed (${res.status}).`);
+        }
         return;
       }
       setStatus("success");
@@ -90,9 +109,10 @@ export default function Upload() {
       setCourseNumber("");
       if (fileInputRef.current) fileInputRef.current.value = "";
       loadCourses();
-    } catch {
+    } catch (e) {
       setStatus("error");
-      setMessage("Upload failed.");
+      const errMsg = e instanceof Error ? e.message : "Upload failed.";
+      setMessage(errMsg);
     }
   };
 
