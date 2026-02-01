@@ -13,7 +13,7 @@ BigRedNotes is a course notes sharing app for Cornell. Users sign in with Google
 | Language     | [TypeScript](https://www.typescriptlang.org) 5 |
 | Database     | [PostgreSQL](https://www.postgresql.org) with [Prisma](https://www.prisma.io) 6 |
 | Auth         | [NextAuth.js](https://nextauth.js.org) 5 (Google OAuth) |
-| File storage | Local disk or [AWS S3](https://aws.amazon.com/s3/) (SDK v3, presigned URLs for private buckets) |
+| File storage | [AWS S3](https://aws.amazon.com/s3/) (SDK v3, presigned URLs for private buckets) |
 | PDF preview  | [pdfjs-dist](https://github.com/mozilla/pdf.js) (Mozilla PDF.js) for first-page thumbnails |
 
 ## Screenshots
