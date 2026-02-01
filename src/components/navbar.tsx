@@ -8,8 +8,6 @@ export default function Navbar() {
                 <Link href={'/files'}>Files</Link>
                 <div className="mb-1">|</div>
                 <Link href={'/upload'}>Upload</Link>
-                <div className="mb-1">|</div>
-                <Link href={'/reviews'}>Reviews</Link>
             </div>
         </nav>
     )

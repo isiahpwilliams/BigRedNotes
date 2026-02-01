@@ -21,29 +21,7 @@ async function main() {
     }),
   ]);
 
-  const getOrCreateProfessor = async (name: string) => {
-    let p = await prisma.professor.findFirst({ where: { name } });
-    if (!p) p = await prisma.professor.create({ data: { name } });
-    return p;
-  };
-
-  const walker = await getOrCreateProfessor("Walker White");
-  const ken = await getOrCreateProfessor("Ken Birman");
-  const adrian = await getOrCreateProfessor("Adrian Sampson");
-
-  await prisma.review.createMany({
-    data: [
-      { professorId: walker.id, rating: 5, comment: "Great lecturer. Clear and engaging.", courseTag: "CS 3780" },
-      { professorId: walker.id, rating: 4, comment: "Assignments are fair. Office hours are helpful.", courseTag: "CS 3780" },
-      { professorId: ken.id, rating: 5, comment: "Brilliant professor. Tough but rewarding.", courseTag: "CS 3410" },
-      { professorId: ken.id, rating: 4, comment: "Lots of material but well organized.", courseTag: "CS 3410" },
-      { professorId: adrian.id, rating: 5, comment: "Very clear explanations. Highly recommend.", courseTag: "CS 3410" },
-      { professorId: adrian.id, rating: 4, comment: "Good course. Labs were useful.", courseTag: "CS 3410" },
-    ],
-    skipDuplicates: true,
-  });
-
-  console.log("Seed completed: courses, professors, and sample reviews created.");
+  console.log("Seed completed: courses created.");
 }
 
 main()

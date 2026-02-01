@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 
 export default auth((req) => {
-  const isProtected = ["/files", "/reviews", "/upload"].some((path) =>
+  const isProtected = ["/files", "/upload"].some((path) =>
     req.nextUrl.pathname.startsWith(path)
   );
   if (isProtected && !req.auth) {
@@ -11,5 +11,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/files/:path*", "/reviews/:path*", "/upload/:path*"],
+  matcher: ["/files/:path*", "/upload/:path*"],
 };
