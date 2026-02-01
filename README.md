@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BigRedNotes
+
+## Description
+
+BigRedNotes is a course notes sharing app for Cornell. Users sign in with Google, upload notes (PDFs and images) tied to a course (e.g. CS 3410, PSYCH 1101), and browse or download notes by course. The file cards show the first page thumbnail of the PDF and you can click on it to fully access the file. The app is read-only for browsing—upload and files pages are protected and require sign-in.
+
+## Tech Stack
+
+| Layer        | Technology |
+| ------------ | ---------- |
+| Framework    | [Next.js](https://nextjs.org) 16 (App Router) |
+| UI           | [React](https://react.dev) 19, [Tailwind CSS](https://tailwindcss.com) 4 |
+| Language     | [TypeScript](https://www.typescriptlang.org) 5 |
+| Database     | [PostgreSQL](https://www.postgresql.org) with [Prisma](https://www.prisma.io) 6 |
+| Auth         | [NextAuth.js](https://nextauth.js.org) 5 (Google OAuth) |
+| File storage | Local disk or [AWS S3](https://aws.amazon.com/s3/) (SDK v3, presigned URLs for private buckets) |
+| PDF preview  | [pdfjs-dist](https://github.com/mozilla/pdf.js) (Mozilla PDF.js) for first-page thumbnails |
+
+## Screenshots
+
+| Home | Notes (by course) | Upload |
+|------|-------------------|--------|
+| ![Home page](screenshots/home_page.png) | ![Notes page](screenshots/notes_page.png) | ![Upload page](screenshots/upload_page.png) |
+
+- **Home** — Landing and sign-in.
+- **Notes** — Filter and view uploaded notes by course; image/PDF thumbnails and download links.
+- **Upload** — Pick a course (subject + number) and upload a file (PDF or image).
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Install dependencies: `npm install`
+2. Copy `.env.example` to `.env.local` and set `DATABASE_URL`, and optionally AWS vars for S3.
+3. Run migrations: `npx prisma migrate dev`
+4. (Optional) Seed courses: `npx prisma db seed`
+5. Run the dev server: `npm run dev` — open [http://localhost:3000](http://localhost:3000)
