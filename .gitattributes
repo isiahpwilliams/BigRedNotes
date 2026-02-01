@@ -1,0 +1,2 @@
+# Exclude vendored/generated files from GitHub language stats so the repo shows as TypeScript.
+public/pdf.worker.mjs linguist-vendored

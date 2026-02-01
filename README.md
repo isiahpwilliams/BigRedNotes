@@ -18,13 +18,17 @@ BigRedNotes is a course notes sharing app for Cornell. Users sign in with Google
 
 ## Screenshots
 
-| Home | Notes (by course) | Upload |
-|------|-------------------|--------|
-| ![Home page](screenshots/home_page.png) | ![Notes page](screenshots/notes_page.png) | ![Upload page](screenshots/upload_page.png) |
+**Home** — Landing and sign-in.
 
-- **Home** — Landing and sign-in.
-- **Notes** — Filter and view uploaded notes by course; image/PDF thumbnails and download links.
-- **Upload** — Pick a course (subject + number) and upload a file (PDF or image).
+![Home page](screenshots/home_page.png)
+
+**Notes** — Filter and view uploaded notes by course; image/PDF thumbnails and download links.
+
+![Notes page](screenshots/notes_page.png)
+
+**Upload** — Pick a course (subject + number) and upload a file (PDF or image).
+
+![Upload page](screenshots/upload_page.png)
 
 ## Getting Started
 
